@@ -34,4 +34,12 @@ class Function
   def childLaTeX
     return getChildContent(lambda { |x| x.latex })
   end
+
+  def htmlTag(tag)
+    return "<#{tag}>#{childHTML}</#{tag}>"
+  end
+
+  def latexFunction(function)
+    return "\\#{function}#{childLaTeX}"
+  end
 end

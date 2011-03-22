@@ -3,6 +3,8 @@ require 'nil/file'
 require_relative 'functions'
 
 class Document
+  attr_writer :sections
+
   def initialize(path)
     initialiseFunctions
     loadDocument(path)
@@ -13,12 +15,16 @@ class Document
     raise 'Unable to open file' if @markup == nil
     @offset = 0
     @line = 1
+    @sections = []
     return parseDocument
   end
 
   def initialiseFunctions
     @functions = {
       'bold' => BoldText,
+      'section' => SectionFunction,
+      'subsection' => SubsectionFunction,
+      'subsubsection' => SubsubsectionFunction,
     }
   end
 
