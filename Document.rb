@@ -7,16 +7,26 @@ class Document
 
   def initialize(path)
     initialiseFunctions
-    loadDocument(path)
+    @nodes = loadDocument(path)
   end
 
   def loadDocument(path)
+    @basename = getBasename(path)
     @markup = Nil.readFile(path)
     raise 'Unable to open file' if @markup == nil
     @offset = 0
     @line = 1
     @sections = []
     return parseDocument
+  end
+
+  def getBasename(path)
+    filename = File.basename(path)
+    match = filename.match(/(.+?)\.bokiz/)
+    if match == nil
+      raise "The file must use the bokiz extension - #{filename.inspect} is invalid"
+    end
+    return match[1]
   end
 
   def initialiseFunctions
@@ -34,7 +44,7 @@ class Document
   end
 
   def getInput
-    return markup[@offset]
+    return @markup[@offset]
   end
 
   def parseDocument(isCode = false)
@@ -54,12 +64,13 @@ class Document
           contents << currentString
           currentString = ''
         end
+        string = @markup[@offset..-1]
         noArgumentsPattern = /\[([a-z]+?)[ \n]/
         argumentsPattern = /\[([a-z]+?)\[(.+?)\][ \n]/
         arguments = nil
-        match = input.match(noArgumentsPattern)
+        match = string.match(noArgumentsPattern)
         if match == nil
-          match = input.match(argumentsPattern)
+          match = string.match(argumentsPattern)
           if match == nil
             error 'Unable to parse the name of a function'
           end
@@ -71,9 +82,9 @@ class Document
         if functionClass == nil
           error "Invalid node name: #{node}"
         end
-        node = functionClass.new(this, arguments)
+        node = functionClass.new(self, arguments)
         node.children = parseDocument(node.isCode)
-        contents << node if node.isPrintable
+        contents << node if node.printable
         next
       when ']'
         if isCode && markup[@offset - 1] != "\n"
@@ -105,5 +116,30 @@ class Document
 
   def advance
     @offset += 1
+  end
+
+  def generateSpecificOutput(path, type, latexHeader = nil)
+    output = latexHeader == nil ? '' : latexHeader
+    @nodes.each do |node|
+      if node.class == String
+        output += node
+      else
+        output += node.method(type).call
+      end
+    end
+    Nil.writeFile(path, output)
+  end
+
+  def generateOutput(directory, latexHeaderPath)
+    htmlPath = Nil.joinPaths(directory, "#{@basename}.html")
+    generateSpecificOutput(htmlPath, :html)
+    temporaryDirectory = Nil.joinPaths(directory, 'temporary')
+    FileUtils.mkdir_p(temporaryDirectory)
+    latexPath = Nil.joinPaths(temporaryDirectory, "#{@basename}.latex")
+    latexHeader = Nil.readFile(latexHeaderPath)
+    if latexHeader == nil
+      raise "Unable to read the LaTeX header file from #{latexHeaderPath}"
+    end
+    generateSpecificOutput(latexPath, :latex, latexHeader)
   end
 end
