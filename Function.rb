@@ -40,6 +40,6 @@ class Function
   end
 
   def latexFunction(function)
-    return "\\#{function}#{childLaTeX}"
+    return "\\#{function}{#{childLaTeX}}"
   end
 end

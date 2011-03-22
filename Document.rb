@@ -1,3 +1,5 @@
+require 'fileutils'
+
 require 'nil/file'
 
 require_relative 'functions'
@@ -135,7 +137,7 @@ class Document
     generateSpecificOutput(htmlPath, :html)
     temporaryDirectory = Nil.joinPaths(directory, 'temporary')
     FileUtils.mkdir_p(temporaryDirectory)
-    latexPath = Nil.joinPaths(temporaryDirectory, "#{@basename}.latex")
+    latexPath = Nil.joinPaths(temporaryDirectory, "#{@basename}.tex")
     latexHeader = Nil.readFile(latexHeaderPath)
     if latexHeader == nil
       raise "Unable to read the LaTeX header file from #{latexHeaderPath}"
