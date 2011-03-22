@@ -25,6 +25,7 @@ class Document
       'section' => SectionFunction,
       'subsection' => SubsectionFunction,
       'subsubsection' => SubsubsectionFunction,
+      'paragraph' => Paragraph,
     }
   end
 

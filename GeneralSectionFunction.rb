@@ -1,4 +1,5 @@
 require_relative 'Function'
+require_relative 'Section'
 
 class GeneralSectionFunction < Function
   def processSection(tag, depth = 0)

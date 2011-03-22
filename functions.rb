@@ -1,5 +1,5 @@
 require_relative 'Function'
-require_relative 'Section'
+require_relative 'GeneralSectionFunction'
 
 class BoldText < Function
   def html
@@ -32,5 +32,15 @@ class SubsubsectionFunction < GeneralSectionFunction
     @htmlTag = 'h3'
     @latexFunction = 'subsubsection'
     @sectionDepth = 2
+  end
+end
+
+class Paragraph< Function
+  def html
+    return htmlTag('p')
+  end
+
+  def latex
+    return latexFunction('par')
   end
 end
