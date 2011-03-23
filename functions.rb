@@ -35,12 +35,32 @@ class SubsubsectionFunction < GeneralSectionFunction
   end
 end
 
-class Paragraph< Function
+class Paragraph < Function
   def html
     return htmlTag('p')
   end
 
   def latex
     return latexFunction('par')
+  end
+end
+
+class List < Function
+  def html
+    return htmlTag('ul', true)
+  end
+
+  def latex
+    return latexEnvironment('itemize')
+  end
+end
+
+class Element < Function
+  def html
+    return htmlTag('li')
+  end
+
+  def latex
+    return "\\item #{childLaTeX}"
   end
 end

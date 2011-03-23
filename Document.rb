@@ -38,6 +38,8 @@ class Document
       'subsection' => SubsectionFunction,
       'subsubsection' => SubsubsectionFunction,
       'paragraph' => Paragraph,
+      'list' => List,
+      'element' => Element,
     }
   end
 

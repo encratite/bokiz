@@ -21,7 +21,7 @@ class Function
       if child.class == String
         output += child
       else
-        output += function(child)
+        output += function.call(child)
       end
     end
     return output
@@ -35,11 +35,16 @@ class Function
     return getChildContent(lambda { |x| x.latex })
   end
 
-  def htmlTag(tag)
-    return "<#{tag}>#{childHTML}</#{tag}>"
+  def htmlTag(tag, newlines = false)
+    newlineString = newlines ? "\n" : ''
+    return "<#{tag}>#{newlineString}#{childHTML}</#{tag}>"
   end
 
   def latexFunction(function)
     return "\\#{function}{#{childLaTeX}}"
+  end
+
+  def latexEnvironment(function)
+    return "\\begin{#{function}}\n#{childLaTeX}\\end{#{function}}"
   end
 end
