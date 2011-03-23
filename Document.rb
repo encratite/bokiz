@@ -5,7 +5,7 @@ require 'nil/file'
 require_relative 'functions'
 
 class Document
-  attr_writer :sections
+  attr_accessor :sections
 
   def initialize(path)
     initialiseFunctions
@@ -122,6 +122,7 @@ class Document
 
   def generateSpecificOutput(path, type, latexHeader = nil)
     output = latexHeader == nil ? '' : latexHeader
+    @sections = []
     @nodes.each do |node|
       if node.class == String
         output += node
@@ -129,7 +130,23 @@ class Document
         output += node.method(type).call
       end
     end
+    if type == :html && !@sections.empty?
+      output = "<div class=\"overview\">\n#{getIndexMarkup}</div>\n\n#{output}"
+    end
     Nil.writeFile(path, output)
+  end
+
+  def getIndexMarkup(sections = @sections)
+    output = "<ul>\n"
+    sections.each do |section|
+      output += "<li><a href=\"#{section.id}\">#{section.name}</a></li>\n"
+      children = section.children
+      if !children.empty?
+        output += "<li>\n#{getIndexMarkup(children)}</li>\n"
+      end
+    end
+    output += "</ul>\n"
+    return output
   end
 
   def generateOutput(directory, latexHeaderPath)

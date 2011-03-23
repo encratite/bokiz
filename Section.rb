@@ -1,5 +1,6 @@
 class Section
-  attr_writer :children
+  attr_reader :name, :id
+  attr_accessor :children
 
   def initialize(name, id)
     @name = name
