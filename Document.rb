@@ -47,6 +47,7 @@ class Document
       'table' => Table,
       'row' => Row,
       'column' => Column,
+      'group' => Group,
     }
   end
 
@@ -91,7 +92,7 @@ class Document
         @offset += match[0].size
         functionClass = @functions[name]
         if functionClass == nil
-          error "Invalid node name: #{node}"
+          error "Invalid node name: #{name}"
         end
         node = functionClass.new(self, arguments)
         node.children = parseDocument(node.isCode)

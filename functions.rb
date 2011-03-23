@@ -126,3 +126,16 @@ class Column < Function
     return childLaTeX
   end
 end
+
+class Group < Function
+  def html
+    if @arguments == nil
+      @document.error 'nil argument in a group function'
+    end
+    return "<span class=\"#{@arguments}\">#{childHTML}</span>"
+  end
+
+  def latex
+    return childLaTeX
+  end
+end
