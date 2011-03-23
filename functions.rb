@@ -74,3 +74,49 @@ class Monospace < Function
     return latexFunction('texttt')
   end
 end
+
+class Table < Function
+  def html
+    classString = @arguments == nil ? '' : " class=\"#{@arguments}\""
+    return "<table#{classString}>\n#{childHTML}</table>"
+  end
+
+  def getTableString
+    if @children.empty?
+      @document.error 'Tables may not be empty'
+    end
+    firstRow = @children.first
+    if firstRow.class != Row
+      @document.error "Encountered an invalid top level class in a table: #{firstRow.class}"
+    end
+    width = firstRow.children.size
+    orientation = []
+    width.times { orientation << 'l' }
+    separator = '|'
+    tableString = separator + orientation.join(separator) + separator
+  end
+
+  def latex
+    return "\\begin{tabular}{#{getTableString}}\n\\hline\n#{childLaTeX}\\end{tabular}"
+  end
+end
+
+class Row < Function
+  def html
+    return htmlTag('tr')
+  end
+
+  def latex
+    output = @children.map { |x| x.latex }.join(' & ') + " \\\\ \\hline"
+  end
+end
+
+class Column < Function
+  def html
+    return htmlTag('td')
+  end
+
+  def latex
+    return childLaTeX
+  end
+end

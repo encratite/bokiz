@@ -41,6 +41,9 @@ class Document
       'list' => List,
       'element' => Element,
       'monospace' => Monospace,
+      'table' => Table,
+      'row' => Row,
+      'column' => Column,
     }
   end
 
