@@ -15,24 +15,24 @@ class Function
     #empty by default
   end
 
-  def getChildContent(function)
+  def getChildContent(type)
     output = ''
     @children.each do |child|
       if child.class == String
-        output += child
+        output += @document.escapeString(child, type)
       else
-        output += function.call(child)
+        output += child.method(type).call
       end
     end
     return output
   end
 
   def childHTML
-    return getChildContent(lambda { |x| x.html })
+    return getChildContent(:html)
   end
 
   def childLaTeX
-    return getChildContent(lambda { |x| x.latex })
+    return getChildContent(:latex)
   end
 
   def htmlTag(tag, newlines = false)

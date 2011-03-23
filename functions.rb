@@ -107,7 +107,7 @@ class Row < Function
   end
 
   def latex
-    columns = @children.map { |x| x.class == String ? x : x.latex }
+    columns = @children.map { |x| x.class == String ? @document.escapeString(x, :latex) : x.latex }
     columns.reject! { |x| x == "\n" }
     columnString = columns.join(' & ')
     output = columnString + " \\\\ \\hline"

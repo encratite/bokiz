@@ -1,6 +1,8 @@
 require 'fileutils'
+require 'htmlentities'
 
 require 'nil/file'
+require 'nil/string'
 
 require_relative 'functions'
 
@@ -10,6 +12,7 @@ class Document
   def initialize(path)
     initialiseFunctions
     @nodes = loadDocument(path)
+    @html = HTMLEntities.new
   end
 
   def loadDocument(path)
@@ -126,12 +129,27 @@ class Document
     @offset += 1
   end
 
+  def escapeString(string, type)
+    case type
+    when :html
+      return @html.encode(string)
+    when :latex
+      targets = "\\_&^|"
+      targets.each_char do |char|
+        string = string.gsub(char) { "\\#{char}" }
+      end
+      return string
+    else
+      raise "Invalid type: #{type}"
+    end
+  end
+
   def generateSpecificOutput(path, type, latexHeader = nil)
     output = latexHeader == nil ? '' : latexHeader
     @sections = []
     @nodes.each do |node|
       if node.class == String
-        output += node
+        output += escapeString(node, type)
       else
         output += node.method(type).call
       end
