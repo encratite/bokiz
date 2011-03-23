@@ -40,6 +40,7 @@ class Document
       'paragraph' => Paragraph,
       'list' => List,
       'element' => Element,
+      'monospace' => Monospace,
     }
   end
 

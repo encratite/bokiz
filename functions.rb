@@ -64,3 +64,13 @@ class Element < Function
     return "\\item #{childLaTeX}"
   end
 end
+
+class Monospace < Function
+  def html
+    return "<span class=\"monospace\">#{childHTML}</span>"
+  end
+
+  def latex
+    return latexFunction('texttt')
+  end
+end
