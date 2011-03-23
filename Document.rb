@@ -134,7 +134,7 @@ class Document
     when :html
       return @html.encode(string)
     when :latex
-      targets = "\\_&^|"
+      targets = "\\_&^|{}"
       targets.each_char do |char|
         string = string.gsub(char) { "\\#{char}" }
       end
