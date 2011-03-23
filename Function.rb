@@ -1,6 +1,6 @@
 class Function
   attr_reader :isCode, :printable
-  attr_writer :children
+  attr_accessor :children
 
   def initialize(document, arguments)
     @document = document

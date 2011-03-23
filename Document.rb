@@ -73,8 +73,8 @@ class Document
           currentString = ''
         end
         string = @markup[@offset..-1]
-        noArgumentsPattern = /\[([a-z]+?)[ \n]/
-        argumentsPattern = /\[([a-z]+?)\[(.+?)\][ \n]/
+        noArgumentsPattern = /\A\[([a-z]+?)[ \n]/
+        argumentsPattern = /\A\[([a-z]+?)\[(.+?)\][ \n]/
         arguments = nil
         match = string.match(noArgumentsPattern)
         if match == nil

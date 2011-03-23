@@ -107,7 +107,13 @@ class Row < Function
   end
 
   def latex
-    output = @children.map { |x| x.latex }.join(' & ') + " \\\\ \\hline"
+    columns = @children.map { |x| x.class == String ? x : x.latex }
+    columns.reject! { |x| x == "\n" }
+    columnString = columns.join(' & ')
+    output = columnString + " \\\\ \\hline"
+    output = output.gsub("\n", '')
+    output = output
+    return output
   end
 end
 
