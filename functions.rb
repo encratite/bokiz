@@ -1,3 +1,5 @@
+require 'www-library/syntaxHighlighting'
+
 require_relative 'Function'
 require_relative 'GeneralSectionFunction'
 
@@ -83,11 +85,11 @@ class Table < Function
 
   def getTableString
     if @children.empty?
-      @document.error 'Tables may not be empty'
+      error 'Tables may not be empty'
     end
     firstRow = @children.first
     if firstRow.class != Row
-      @document.error "Encountered an invalid top level class in a table: #{firstRow.class}"
+      error "Encountered an invalid top level class in a table: #{firstRow.class}"
     end
     width = firstRow.children.size
     orientation = []
@@ -130,12 +132,50 @@ end
 class Group < Function
   def html
     if @arguments == nil
-      @document.error 'nil argument in a group function'
+      error 'nil argument in a group function'
     end
     return "<span class=\"#{@arguments}\">#{childHTML}</span>"
   end
 
   def latex
     return childLaTeX
+  end
+end
+
+class Code < Function
+  Languages = [
+    ['assembly', 'masm', 'Assembly'],
+    ['assembly-fasm', 'fasm', 'FASM Assembly'],
+    ['assembly-gas', 'asm', 'gas Assembly'],
+    ['assembly-masm', 'masm', 'MASM Assembly'],
+    ['assembly-nasm', 'nasm', 'NASM Assembly'],
+    ['cplusplus', 'cpp', 'C++'],
+    ['plain', nil, nil],
+  ]
+
+  def setup
+    @isCode = true
+    @escape = false
+    if @arguments == nil
+      error 'No code type specified for a code section'
+    end
+    Languages.each do |name, script, title|
+      if name == @arguments
+        @script = script
+        @title = title
+        return
+      end
+    end
+    error "Unknown programming language: #{@arguments}"
+  end
+
+  def html
+    output = @title == nil ? '' : "<span class=\"codeTitle\">#{@title}</span>\n"
+    output += WWWLib.getHighlightedList(@script, childHTML)
+    return output
+  end
+
+  def latex
+    return latexEnvironment('lstlisting')
   end
 end

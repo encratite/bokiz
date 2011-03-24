@@ -8,6 +8,7 @@ class Function
     @children = []
     @isCode = false
     @printable = true
+    @escape = true
     setup
   end
 
@@ -19,7 +20,7 @@ class Function
     output = ''
     @children.each do |child|
       if child.class == String
-        output += @document.escapeString(child, type)
+        output += @escape ? @document.escapeString(child, type) : child
       else
         output += child.method(type).call
       end
@@ -46,5 +47,9 @@ class Function
 
   def latexEnvironment(function)
     return "\\begin{#{function}}\n#{childLaTeX}\\end{#{function}}"
+  end
+
+  def error(message)
+    @document.error(message)
   end
 end

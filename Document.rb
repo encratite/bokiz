@@ -48,6 +48,7 @@ class Document
       'row' => Row,
       'column' => Column,
       'group' => Group,
+      'code' => Code,
     }
   end
 
@@ -99,7 +100,7 @@ class Document
         contents << node if node.printable
         next
       when ']'
-        if isCode && markup[@offset - 1] != "\n"
+        if isCode && @markup[@offset - 1] != "\n"
           #encountered a non-terminal end of scope tag within a code segment
           #treat it like a regular string and continue parsing
           addString.call
