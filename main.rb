@@ -9,5 +9,5 @@ markupPath = ARGV[0]
 latexHeader = ARGV[1]
 outputDirectory = ARGV[2]
 
-document = Document.new(markupPath)
-document.generateOutput(outputDirectory, latexHeader)
+document = Document.new(markupPath, outputDirectory)
+document.generateOutput(latexHeader)

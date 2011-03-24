@@ -7,12 +7,14 @@ require 'nil/string'
 require_relative 'functions'
 
 class Document
+  attr_reader :outputDirectory
   attr_accessor :sections
 
-  def initialize(path)
+  def initialize(path, outputDirectory)
     initialiseFunctions
     @nodes = loadDocument(path)
     @html = HTMLEntities.new
+    @outputDirectory = outputDirectory
   end
 
   def loadDocument(path)
@@ -49,6 +51,7 @@ class Document
       'column' => Column,
       'group' => Group,
       'code' => Code,
+      'math' => LaTeXMath,
     }
   end
 
@@ -175,7 +178,8 @@ class Document
     return output
   end
 
-  def generateOutput(directory, latexHeaderPath)
+  def generateOutput(latexHeaderPath)
+    directory = @outputDirectory
     htmlPath = Nil.joinPaths(directory, "#{@basename}.html")
     generateSpecificOutput(htmlPath, :html)
     temporaryDirectory = Nil.joinPaths(directory, 'temporary')

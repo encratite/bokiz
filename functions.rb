@@ -1,7 +1,10 @@
+require 'digest/sha2'
+
 require 'www-library/syntaxHighlighting'
 
 require_relative 'Function'
 require_relative 'GeneralSectionFunction'
+require_relative 'latex'
 
 class BoldText < Function
   def html
@@ -177,5 +180,23 @@ class Code < Function
 
   def latex
     return latexEnvironment('lstlisting')
+  end
+end
+
+class LaTeXMath < Function
+  def html
+    if @children.empty? || @children.size != 1 || @children.first.class != String
+      @document.error 'Invalid content in a math function'
+    end
+    latex = @children.first
+    hash = Digest::SHA256.hexdigest(latex)
+    imagePath = "images/#{hash}.png"
+    fullImagePath = Nil.joinPaths(@document.outputDirectory, imagePath)
+    LaTeX.generateImage(latex, 'temporary', fullImagePath)
+    return "<img src=\"#{imagePath}\" alt=\"#{@document.escapeString(latex, :html)}\" />"
+  end
+
+  def latex
+    return "$#{childLaTeX}$"
   end
 end
