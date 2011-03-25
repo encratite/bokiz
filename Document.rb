@@ -22,6 +22,7 @@ class Document
     @markup = Nil.readFile(path)
     raise 'Unable to open file' if @markup == nil
     @offset = 0
+    @lastLine = nil
     @line = 1
     @sections = []
     return parseDocument
@@ -70,6 +71,10 @@ class Document
     currentString = ''
     while @offset < @markup.size
       input = getInput
+      if @lastLine != @line
+        @lastLine = @line
+        #puts "#{@line} #{@markup[@offset, 20].inspect}"
+      end
       addString = lambda { currentString += input }
       case input
       when '['
@@ -95,7 +100,11 @@ class Document
           arguments = match[2]
         end
         name = match[1]
-        @offset += match[0].size
+        fullMatch = match[0]
+        @offset += fullMatch.size
+        if fullMatch.index("\n") != nil
+          @line += 1
+        end
         functionClass = @functions[name]
         if functionClass == nil
           error "Invalid node name: #{name}"
