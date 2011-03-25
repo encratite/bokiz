@@ -212,3 +212,23 @@ class CenteredLaTeXMath < LaTeXMath
     @centered = true
   end
 end
+
+class Link < Function
+  def html
+    description = childHTML
+    if @arguments == nil
+      link = description
+    else
+      link = @arguments
+    end
+    return "<a href=\"#{link}\">#{description}</a>"
+  end
+
+  def latex
+    if @arguments == nil
+      return "\\url{#{childLaTeX}}"
+    else
+      return "\\href{#{@arguments}}{#{childLaTeX}}"
+    end
+  end
+end

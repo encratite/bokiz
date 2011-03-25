@@ -53,6 +53,7 @@ class Document
       'code' => Code,
       'math' => LaTeXMath,
       'center-math' => CenteredLaTeXMath,
+      'link' => Link,
     }
   end
 
