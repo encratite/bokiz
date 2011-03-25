@@ -184,6 +184,10 @@ class Code < Function
 end
 
 class LaTeXMath < Function
+  def setup
+    @centered = false
+  end
+
   def html
     if @children.empty? || @children.size != 1 || @children.first.class != String
       @document.error 'Invalid content in a math function'
@@ -193,10 +197,18 @@ class LaTeXMath < Function
     imagePath = "images/#{hash}.png"
     fullImagePath = Nil.joinPaths(@document.outputDirectory, imagePath)
     LaTeX.generateImage(latex, 'temporary', fullImagePath)
-    return "<img src=\"#{imagePath}\" alt=\"#{@document.escapeString(latex, :html)}\" />"
+    classString = @centered ? 'class="centeredMath" ' : ''
+    imageMarkup = "<img src=\"#{imagePath}\" #{classString}alt=\"#{@document.escapeString(latex, :html)}\" />"
+    return imageMarkup
   end
 
   def latex
-    return "$#{childLaTeX}$"
+    return @centered ? "$$#{childLaTeX}$$" : "$#{childLaTeX}$"
+  end
+end
+
+class CenteredLaTeXMath < LaTeXMath
+  def setup
+    @centered = true
   end
 end

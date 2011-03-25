@@ -38,7 +38,7 @@ EOF
     filenames = ['aux', 'dvi', 'log', 'tex'].map { |x| "#{base}.#{x}" }
     filenames << 'texput.log'
     filenames.each do |name|
-      FileUtils.rm(Nil.joinPaths(temporaryDirectory, name))
+      FileUtils.rm_f(Nil.joinPaths(temporaryDirectory, name))
     end
   end
 end

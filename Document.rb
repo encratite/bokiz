@@ -52,6 +52,7 @@ class Document
       'group' => Group,
       'code' => Code,
       'math' => LaTeXMath,
+      'center-math' => CenteredLaTeXMath,
     }
   end
 
@@ -81,8 +82,8 @@ class Document
           currentString = ''
         end
         string = @markup[@offset..-1]
-        noArgumentsPattern = /\A\[([a-z]+?)[ \n]/
-        argumentsPattern = /\A\[([a-z]+?)\[(.+?)\][ \n]/
+        noArgumentsPattern = /\A\[([a-z\-]+?)[ \n]/
+        argumentsPattern = /\A\[([a-z\-]+?)\[(.+?)\][ \n]/
         arguments = nil
         match = string.match(noArgumentsPattern)
         if match == nil
