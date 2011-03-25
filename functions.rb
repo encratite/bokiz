@@ -60,6 +60,16 @@ class List < Function
   end
 end
 
+class Enumeration < Function
+  def html
+    return htmlTag('ol', true)
+  end
+
+  def latex
+    return latexEnvironment('enumerate')
+  end
+end
+
 class Element < Function
   def html
     return htmlTag('li')

@@ -55,6 +55,7 @@ class Document
       'math' => LaTeXMath,
       'center-math' => CenteredLaTeXMath,
       'link' => Link,
+      'enumeration' => Enumeration,
     }
   end
 
@@ -188,14 +189,22 @@ class Document
     Nil.writeFile(path, output)
   end
 
-  def getIndexMarkup(sections = @sections)
+  def getIndexMarkup(sections = @sections, numericIdentifier = [])
+    counter = 1
     output = "<ul>\n"
     sections.each do |section|
-      output += "<li><a href=\"#{section.id}\">#{section.name}</a></li>\n"
+      currentIdentifiers = numericIdentifier + [counter]
+      if currentIdentifiers.size == 1
+        number = currentIdentifiers.first.to_s + '.'
+      else
+        number = currentIdentifiers.map { |x| x.to_s }.join('.')
+      end
+      output += "<li><a href=\"\##{section.id}\">#{number} #{section.name}</a></li>\n"
       children = section.children
       if !children.empty?
-        output += "<li>\n#{getIndexMarkup(children)}</li>\n"
+        output += "<li>\n#{getIndexMarkup(children, currentIdentifiers)}</li>\n"
       end
+      counter += 1
     end
     output += "</ul>\n"
     return output
