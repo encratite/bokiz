@@ -124,11 +124,19 @@ end
 
 class Column < Function
   def html
-    return htmlTag('td')
+    if @arguments == nil
+      return htmlTag('td')
+    else
+      return "<td colspan=\"#{@arguments}\">#{childHTML}</td>"
+    end
   end
 
   def latex
-    return childLaTeX
+    if @arguments == nil
+      return childLaTeX
+    else
+      return "\\multicolumn{#{@arguments}}{|l|}{#{childLaTeX}}"
+    end
   end
 end
 
@@ -195,8 +203,10 @@ class LaTeXMath < Function
     latex = @children.first
     hash = Digest::SHA256.hexdigest(latex)
     imagePath = "images/#{hash}.png"
-    fullImagePath = Nil.joinPaths(@document.outputDirectory, imagePath)
-    LaTeX.generateImage(latex, 'temporary', fullImagePath)
+    if !File.exists?(imagePath)
+      fullImagePath = Nil.joinPaths(@document.outputDirectory, imagePath)
+      LaTeX.generateImage(latex, 'temporary', fullImagePath)
+    end
     classString = @centered ? 'class="centeredMath" ' : ''
     imageMarkup = "<img src=\"#{imagePath}\" #{classString}alt=\"#{@document.escapeString(latex, :html)}\" />"
     return imageMarkup

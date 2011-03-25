@@ -201,5 +201,6 @@ class Document
       raise "Unable to read the LaTeX header file from #{latexHeaderPath}"
     end
     generateSpecificOutput(latexPath, :latex, latexHeader)
+    FileUtils.rm_rf(temporaryDirectory)
   end
 end
