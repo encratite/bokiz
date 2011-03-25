@@ -92,11 +92,12 @@ end
 
 class Table < Function
   def html
+    setHeaderFields
     classString = @arguments == nil ? '' : " class=\"#{@arguments}\""
     return "<table#{classString}>\n#{childHTML}</table>"
   end
 
-  def getTableString
+  def setHeaderFields
     if @children.empty?
       error 'Tables may not be empty'
     end
@@ -104,6 +105,17 @@ class Table < Function
     if firstRow.class != Row
       error "Encountered an invalid top level class in a table: #{firstRow.class}"
     end
+    firstRow.children.each do |column|
+      if column.class != Column
+        error "Encountered a non-column within a row in a table: #{column.class}"
+      end
+      column.isHeader = true
+    end
+  end
+
+  def getTableString
+    setHeaderFields
+    firstRow = @children.first
     width = firstRow.children.size
     orientation = []
     width.times { orientation << 'l' }
@@ -133,11 +145,18 @@ class Row < Function
 end
 
 class Column < Function
+  attr_writer :isHeader
+
+  def setup
+    @isHeader = false
+  end
+
   def html
+    tag = @isHeader ? 'th' : 'td'
     if @arguments == nil
-      return htmlTag('td')
+      return htmlTag(tag)
     else
-      return "<td colspan=\"#{@arguments}\">#{childHTML}</td>"
+      return "<#{tag} colspan=\"#{@arguments}\">#{childHTML}</#{tag}>"
     end
   end
 
