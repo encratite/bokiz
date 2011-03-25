@@ -183,6 +183,7 @@ class Code < Function
   def html
     output = @title == nil ? '' : "<span class=\"codeTitle\">#{@title}</span>\n"
     output += WWWLib.getHighlightedList(@script, childHTML)
+    #return "<div>\n#{output}</div>"
     return output
   end
 

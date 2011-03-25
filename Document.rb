@@ -145,10 +145,22 @@ class Document
     @offset += 1
   end
 
+  def fixWhitespace(input)
+    space = '&nbsp;'
+    if input == ' '
+      output = space
+    else
+      output = input.gsub('  ', space + ' ')
+    end
+    return output
+  end
+
   def escapeString(string, type)
     case type
     when :html
-      return @html.encode(string)
+      output = @html.encode(string)
+      output = fixWhitespace(output)
+      return output
     when :latex
       targets = "\\_&^|{}"
       targets.each_char do |char|
