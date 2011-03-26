@@ -210,8 +210,8 @@ class Code < Function
   end
 
   def html
-    output = @title == nil ? '' : "<span class=\"codeTitle\">#{@title}</span>\n"
-    output += WWWLib.getHighlightedList(@script, childHTML)
+    output = @title == nil ? '' : "<p class=\"codeTitle\">#{@title}</p>\n"
+    output += WWWLib.getHighlightedContent(@script, childHTML)
     #return "<div>\n#{output}</div>"
     return output
   end
